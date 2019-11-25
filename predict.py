@@ -25,7 +25,6 @@ threshold = 0.45
 #min_size = [15000, 15000, 15000, 15000]
 min_size = [20000, 20000, 22500, 10000]
 
-test_df = []
 encoded_pixels = []
 BATCH_SIZE = 1
 
@@ -49,9 +48,6 @@ for i, x_batch in enumerate(test_generator):
     # 4  = 4 classes, Fish, Flower, Gravel Surger.
     
     for j, idx in enumerate(batch_idx):
-        filename = test_imgs['ImageId'].iloc[idx]
-        image_df = sub_df[sub_df['ImageId'] == filename].copy()
-        
         # Batch prediction result set
         pred_masks = batch_pred_masks[j, ]
         

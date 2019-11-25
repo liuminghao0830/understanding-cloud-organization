@@ -23,13 +23,13 @@ train_idx, val_idx = train_test_split(mask_count_df.index,
                           random_state=2019, test_size=0.2)
 
 # # Predict on Test Set
-model = sm.Unet('resnet18', classes=4, input_shape=(320, 480, 3), activation='sigmoid')
-model.load_weights('../resnet18_unet.h5')
+model = sm.Unet('efficientnetb4', classes=4, input_shape=(320, 480, 3), activation='sigmoid')
+model.load_weights('../efn_unet.h5')
 
 #model = tta_segmentation(model, h_flip=True, h_shift=(-10, 10), merge='mean')
 
-threshold = 0.45
-min_size = [15000, 15000, 15000, 15000]
+threshold = [0.45, 0.50, 0.30, 0.35]
+min_size = [20000, 20000, 22500, 10000]
 
 BATCH_SIZE = 100
 
@@ -53,7 +53,7 @@ for x, y_true in val_generator:
         for k in range(pred_masks.shape[-1]):
             pred_mask = pred_masks[...,k].astype('float32')
                 
-            pred_mask, num_predict = post_process(pred_mask, threshold, 
+            pred_mask, num_predict = post_process(pred_mask, threshold[k], 
                                                 min_size[k], (320, 480))
             batch_pred_masks[j, :,:, k] = pred_mask
     batch_dice = numpy_dice_coef(y_true, batch_pred_masks)
